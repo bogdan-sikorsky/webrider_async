@@ -15,7 +15,7 @@ WebRiderAsync is an asynchronous web scraping utility designed to efficiently ha
 To use WebRiderAsync, you need to have Python 3.8 or higher installed. Install the required packages using pip:
 
 ```shell
-pip install webryder_async
+pip install webryder_async==0.0.3
 ```
 
 ## Usage
