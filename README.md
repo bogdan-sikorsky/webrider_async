@@ -20,6 +20,8 @@ pip install webryder_async
 
 ## Usage
 
+> Full working example of usage you can find here [examples folder](https://github.com/bogdan-sikorsky/webrider_async/examples).
+
 Here's a basic example of how to use the WebRiderAsync class:
 
 ### Initialization
@@ -65,7 +67,7 @@ webrider.update_settings(
 )
 ```
 
-> Full working example of usage you can check in [examples folder](https://github.com/bogdan-sikorsky/webrider_async/examples).
+> Full working example of usage you can find here [examples folder](https://github.com/bogdan-sikorsky/webrider_async/examples).
 
 ### Tracking Statistics
 
