@@ -114,3 +114,5 @@ If a request fails after the maximum number of retries, it is logged as a failur
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+Thanks!
