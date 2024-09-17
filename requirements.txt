@@ -1,0 +1,5 @@
+Brotli==1.1.0
+aiohttp==3.10.5
+certifi==2024.8.30
+setuptools==75.1.0
+beautifulsoup4==4.12.3
