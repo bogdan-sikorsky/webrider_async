@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main  # or master
-      - development
 
 jobs:
   build:

@@ -15,12 +15,12 @@ WebRiderAsync is an asynchronous web scraping utility designed to efficiently ha
 To use WebRiderAsync, you need to have Python 3.8 or higher installed. Install the required packages using pip:
 
 ```shell
-pip install webryder_async==0.0.3
+pip install webryder_async==0.0.4
 ```
 
 ## Usage
 
-> Full working example of usage you can find here [examples folder](https://github.com/bogdan-sikorsky/webrider_async/examples).
+> Full working example of usage you can find here [examples folder](https://github.com/bogdan-sikorsky/webrider_async/tree/main/examples).
 
 Here's a basic example of how to use the WebRiderAsync class:
 
@@ -67,7 +67,7 @@ webrider.update_settings(
 )
 ```
 
-> Full working example of usage you can find here [examples folder](https://github.com/bogdan-sikorsky/webrider_async/examples).
+> Full working example of usage you can find here [examples folder](https://github.com/bogdan-sikorsky/webrider_async/tree/main/examples).
 
 ### Tracking Statistics
 
