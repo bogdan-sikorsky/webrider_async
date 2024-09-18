@@ -9,11 +9,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
-      GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
     - uses: actions/checkout@v2
 
@@ -27,30 +22,37 @@ jobs:
         python -m pip install --upgrade pip
         pip install setuptools wheel twine
 
+    - name: Build package
+      run: |
+        python setup.py sdist bdist_wheel
+
+    - name: Publish to PyPI
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        twine upload dist/*
+
     - name: Get the current version from setup.py
       id: get_version
       run: |
         version=$(python setup.py --version)
-        echo "version=$version" >> $GITHUB_ENV
-
-    - name: Set up Git credentials
-      run: |
-        git config user.name "${{ env.GIT_USER_NAME }}"
-        git config user.email "${{ env.GIT_USER_EMAIL }}"
-        git remote set-url origin https://x-access-token:${{ env.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+        echo "::set-output name=version::$version"
 
     - name: Create Git Tag
       run: |
-        git tag -a v${{ env.version }} -m "Release v${{ env.version }}"
-        git push origin v${{ env.version }}
+        git config user.name "${{ secrets.GIT_USER_NAME }}"
+        git config user.email "${{ secrets.GIT_USER_EMAIL }}"
+        git tag -a v${{ steps.get_version.outputs.version }} -m "Release v${{ steps.get_version.outputs.version }}"
+        git push origin v${{ steps.get_version.outputs.version }}
 
     - name: Create GitHub Release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # This token is automatically provided by GitHub Actions
       with:
-        tag_name: v${{ env.version }}
-        release_name: Release v${{ env.version }}
+        tag_name: v${{ steps.get_version.outputs.version }}
+        release_name: Release v${{ steps.get_version.outputs.version }}
         body: |
           This release contains the latest version of the package.
         draft: false
