@@ -9,6 +9,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:  # Define variables for name and email
+      GIT_USER_NAME: "Bogdan Sikorsky"
+      GIT_USER_EMAIL: "bogdan.sikorsky.dev@gmail.com"
+
     steps:
     - uses: actions/checkout@v2
 
@@ -39,10 +43,14 @@ jobs:
         version=$(python setup.py --version)
         echo "::set-output name=version::$version"
 
-    - name: Create Git Tag
+    - name: Set up Git credentials
       run: |
         git config user.name "${{ secrets.GIT_USER_NAME }}"
         git config user.email "${{ secrets.GIT_USER_EMAIL }}"
+        git remote set-url origin https://x-access-token:${{ secrets.TOKEN_GITHUB }}@github.com/${{ github.repository }}.git
+
+    - name: Create Git Tag
+      run: |
         git tag -a v${{ steps.get_version.outputs.version }} -m "Release v${{ steps.get_version.outputs.version }}"
         git push origin v${{ steps.get_version.outputs.version }}
 
