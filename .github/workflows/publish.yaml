@@ -26,17 +26,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install setuptools wheel twine
 
-#    - name: Build package
-#      run: |
-#        python setup.py sdist bdist_wheel
-
-#    - name: Publish to PyPI
-#      env:
-#        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-#        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-#      run: |
-#        twine upload dist/*
-
     - name: Get the current version from setup.py
       id: get_version
       run: |
@@ -47,12 +36,11 @@ jobs:
       run: |
         git config user.name "${{ secrets.GIT_USER_NAME }}"
         git config user.email "${{ secrets.GIT_USER_EMAIL }}"
-        git remote set-url origin https://x-access-token:${{ secrets.TOKEN_GITHUB }}@github.com/${{ github.repository }}.git
 
     - name: Create Git Tag
       run: |
         git tag -a v${{ steps.get_version.outputs.version }} -m "Release v${{ steps.get_version.outputs.version }}"
-        git push origin v${{ steps.get_version.outputs.version }}
+        git push https://${{ secrets.TOKEN_GITHUB }}@github.com/${{ github.repository }}.git v${{ steps.get_version.outputs.version }}
 
     - name: Create GitHub Release
       uses: actions/create-release@v1
@@ -65,3 +53,15 @@ jobs:
           This release contains the latest version of the package.
         draft: false
         prerelease: false
+
+    # Optionally, you can include the following steps if you want to build and publish the package
+    # - name: Build package
+    #   run: |
+    #     python setup.py sdist bdist_wheel
+
+    # - name: Publish to PyPI
+    #   env:
+    #     TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+    #     TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+    #   run: |
+    #     twine upload dist/*
