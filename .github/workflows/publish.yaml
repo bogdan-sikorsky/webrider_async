@@ -40,7 +40,8 @@ jobs:
     - name: Create Git Tag
       run: |
         git tag -a v${{ steps.get_version.outputs.version }} -m "Release v${{ steps.get_version.outputs.version }}"
-        git push https://${{ secrets.TOKEN_GITHUB }}@github.com/${{ github.repository }}.git v${{ steps.get_version.outputs.version }}
+        git ls-remote https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ secrets.GIT_USER_NAME }}/${{ github.repository }}.git
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git v${{ steps.get_version.outputs.version }}
 
     - name: Create GitHub Release
       uses: actions/create-release@v1
