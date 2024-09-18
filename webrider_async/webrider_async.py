@@ -24,7 +24,6 @@ class Response:
         self.status_code = status_code
 
 
-
 class WebRiderAsync:
     """
     Description
@@ -45,6 +44,7 @@ class WebRiderAsync:
             self,
             log_level: str = 'debug',
             file_output: bool = False,
+            log_dir: str = None,
 
             random_user_agents: bool = False,
             custom_user_agent: str = None,
@@ -66,6 +66,9 @@ class WebRiderAsync:
 
         :param file_output:
             Saves all log to file
+
+        :param log_dir:
+            Custom path to log output file
 
         :param random_user_agents:
             Enabling using random user agents for each request. Uses single ua if False.
@@ -98,7 +101,7 @@ class WebRiderAsync:
         """
 
         # ---LOGGER---
-        self.logger = get_logger(log_level, file_output)
+        self.logger = get_logger(log_level, file_output, log_dir)
         self.logger.info(f'WEBRIDER_ASYNC: Launching Async Requests Manager')
 
         # ---BASIC SETTINGS---
@@ -392,6 +395,7 @@ class WebRiderAsync:
             self,
             log_level: str = 'debug',
             file_output: bool = False,
+            log_dir: str = None,
 
             random_user_agents: bool = False,
             custom_user_agent: str = None,
@@ -414,7 +418,7 @@ class WebRiderAsync:
         """
 
         # ---LOGGER---
-        self.logger = get_logger(log_level, file_output)
+        self.logger = get_logger(log_level, file_output, log_dir)
         self.logger.info(f'WEBRIDER_ASYNC: Updating settings for Async WebRider')
 
         # ---BASIC SETTINGS---
