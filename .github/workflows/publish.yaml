@@ -3,7 +3,7 @@ name: Publish Python Package
 on:
   push:
     branches:
-      - main  # or master
+      - main  # Trigger the workflow when a commit is pushed to the main branch
 
 jobs:
   build:
@@ -32,3 +32,28 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         twine upload dist/*
+
+    - name: Get the current version from setup.py
+      id: get_version
+      run: |
+        version=$(python setup.py --version)
+        echo "::set-output name=version::$version"
+
+    - name: Create Git Tag
+      run: |
+        git config user.name "${{ secrets.GIT_USER_NAME }}"
+        git config user.email "${{ secrets.GIT_USER_EMAIL }}"
+        git tag -a v${{ steps.get_version.outputs.version }} -m "Release v${{ steps.get_version.outputs.version }}"
+        git push origin v${{ steps.get_version.outputs.version }}
+
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+      with:
+        tag_name: v${{ steps.get_version.outputs.version }}
+        release_name: Release v${{ steps.get_version.outputs.version }}
+        body: |
+          This release contains the latest version of the package.
+        draft: false
+        prerelease: false

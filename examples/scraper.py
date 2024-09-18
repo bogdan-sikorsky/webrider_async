@@ -44,7 +44,7 @@ def start_scraper():
 
     # Phase 2: getting product pages from pagination urls
     real_estate_urls = []
-    pagination_pages_chunks = webrider.chunkify(pagination_pages, 10)  # Making chunks for stability (README.md)
+    pagination_pages_chunks = webrider.chunkify(pagination_pages, 10)  # Explained in Best practices (README.md)
     for urls_chunk in pagination_pages_chunks:
         real_estate_urls += get_pagination(urls_chunk)  # Parsing chunks of 10 pages simultaneously
 
@@ -52,7 +52,7 @@ def start_scraper():
 
     # Phase 3: getting product data
     data = []
-    real_estate_urls_chunks = webrider.chunkify(real_estate_urls, 10)  # Making chunks for stability (README.md)
+    real_estate_urls_chunks = webrider.chunkify(real_estate_urls, 10)  # Explained in Best practices (README.md)
     for urls_chunk in real_estate_urls_chunks:
         data.append(get_content(urls_chunk))  # Parsing chunks of 10 pages simultaneously
 
@@ -63,7 +63,7 @@ def start_scraper():
     with open(file_path, 'w') as json_file:
         json.dump(data, json_file, indent=4)
 
-    # Function to reset settings if needed to use clas for another scraper without initialization
+    # Function to reset settings if needed to use class for another scraper without initialization
     webrider.update_settings(
         random_user_agents = False,
     )
