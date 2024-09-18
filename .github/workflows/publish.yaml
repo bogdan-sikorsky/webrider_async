@@ -3,7 +3,7 @@ name: Publish Python Package
 on:
   push:
     branches:
-      - main  # This will run the workflow when a commit is pushed to the main branch
+      - main
 
 jobs:
   build:
@@ -12,7 +12,7 @@ jobs:
     env:
       GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
       GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Ensure this is correctly set in your repo secrets
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
     - uses: actions/checkout@v2
@@ -33,20 +33,11 @@ jobs:
         version=$(python setup.py --version)
         echo "version=$version" >> $GITHUB_ENV
 
-    - name: Debug Remote URL
-      run: |
-        echo "Remote URL: https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
-        git remote -v
-        git ls-remote https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-
     - name: Set up Git credentials
       run: |
         git config user.name "${{ env.GIT_USER_NAME }}"
         git config user.email "${{ env.GIT_USER_EMAIL }}"
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-
-    - name: Verify Remote Access
-      run: git ls-remote https://x-access-token:${{ env.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+        git remote set-url origin https://x-access-token:${{ env.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
     - name: Create Git Tag
       run: |
