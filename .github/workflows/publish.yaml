@@ -3,15 +3,14 @@ name: Publish Python Package
 on:
   push:
     branches:
-      - main  # This will run the workflow when a commit is pushed to the main branch
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:  # Define variables for name and email
-      GIT_USER_NAME: "Bogdan Sikorsky"
-      GIT_USER_EMAIL: "bogdan.sikorsky.dev@gmail.com"
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Ensure this is correctly set in your repo secrets
 
     steps:
     - uses: actions/checkout@v2
@@ -36,17 +35,23 @@ jobs:
       run: |
         git config user.name "${{ secrets.GIT_USER_NAME }}"
         git config user.email "${{ secrets.GIT_USER_EMAIL }}"
+        git remote set-url origin https://x-access-token:${{ env.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+
+    - name: Debug Remote URL
+      run: echo "Remote URL: https://x-access-token:${{ env.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+
+    - name: Verify Remote Access
+      run: git ls-remote https://x-access-token:${{ env.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
     - name: Create Git Tag
       run: |
         git tag -a v${{ steps.get_version.outputs.version }} -m "Release v${{ steps.get_version.outputs.version }}"
-        git ls-remote https://x-access-token:${{ secrets.TOKEN_GITHUB }}@github.com/${{ github.repository }}.git
-        git push https://x-access-token:${{ secrets.TOKEN_GITHUB }}@github.com/${{ github.repository }}.git v${{ steps.get_version.outputs.version }}
+        git push origin v${{ steps.get_version.outputs.version }}
 
     - name: Create GitHub Release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # This token is automatically provided by GitHub Actions
+        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
       with:
         tag_name: v${{ steps.get_version.outputs.version }}
         release_name: Release v${{ steps.get_version.outputs.version }}
@@ -54,15 +59,3 @@ jobs:
           This release contains the latest version of the package.
         draft: false
         prerelease: false
-
-    # Optionally, you can include the following steps if you want to build and publish the package
-    # - name: Build package
-    #   run: |
-    #     python setup.py sdist bdist_wheel
-
-    # - name: Publish to PyPI
-    #   env:
-    #     TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-    #     TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-    #   run: |
-    #     twine upload dist/*
